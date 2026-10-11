@@ -1,0 +1,32 @@
+{
+  "name": "udev-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "cap:sync": "npm run build && cap sync android",
+    "cap:open:android": "cap open android",
+    "cap:run:android": "cap run android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/cli": "^8.5.2",
+    "@capacitor/core": "^8.5.2",
+    "@delicity/capacitor-thermal-printer": "^8.5.2",
+    "@lucide/vue": "^1.49.0",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^4.2.1",
+    "vite": "^6.1.0",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.4",
+    "typescript": "~5.7.2",
+    "vue-tsc": "^2.2.0"
+  }
+}

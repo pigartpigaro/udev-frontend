@@ -1,0 +1,24 @@
+<script setup lang="ts">
+import type { ProjectType } from '../../types/projectType'
+import AppIcon from '../../../../../shared/components/layout/AppIcon.vue'
+
+defineProps<{ projectTypes: ProjectType[]; loading: boolean }>()
+const emit = defineEmits<{ edit: [projectType: ProjectType] }>()
+</script>
+
+<template>
+  <div>
+    <div v-if="loading" class="list-state">Memuat tipe proyek...</div>
+    <div v-else-if="!projectTypes.length" class="list-state"><span class="empty-mark"><AppIcon name="folders" :size="22" /></span><strong>Tipe proyek belum tersedia</strong><span>Tambahkan tipe proyek agar mudah mengelompokkan pekerjaan.</span></div>
+    <div v-else class="table-wrap"><table><thead><tr><th>Kode</th><th>Nama tipe</th><th>Deskripsi</th><th>Status</th><th><span class="sr-only">Aksi</span></th></tr></thead><tbody>
+      <tr v-for="projectType in projectTypes" :key="projectType.id"><td><span class="code">{{ projectType.code }}</span></td><td><strong>{{ projectType.name }}</strong></td><td class="description">{{ projectType.description || '—' }}</td><td><span class="status" :class="projectType.is_active ? 'active' : 'inactive'"><i></i>{{ projectType.is_active ? 'Aktif' : 'Nonaktif' }}</span></td><td><div class="actions"><button type="button" :aria-label="`Edit ${projectType.name}`" title="Edit" @click="emit('edit', projectType)"><AppIcon name="edit" :size="16" /></button></div></td></tr>
+    </tbody></table></div>
+  </div>
+    <div v-if="projectTypes.length && !loading" class="project-type-cards"><article v-for="projectType in projectTypes" :key="projectType.id" class="project-type-card"><div class="card-top"><div class="identity-copy"><strong>{{ projectType.name }}</strong><small>{{ projectType.code }}</small></div><span class="status" :class="projectType.is_active ? 'active' : 'inactive'"><i></i>{{ projectType.is_active ? 'Aktif' : 'Nonaktif' }}</span></div><p>{{ projectType.description || 'Belum ada deskripsi.' }}</p><div class="card-actions"><button type="button" @click="emit('edit', projectType)"><AppIcon name="edit" :size="15" /> Edit</button></div></article></div>
+</template>
+
+<style scoped>
+.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;text-align:left}th{padding:12px 15px;border-bottom:1px solid #ffffff12;color:#8f968b;font-size:9px;font-weight:700;letter-spacing:.55px;text-transform:uppercase;white-space:nowrap}td{padding:14px 15px;border-bottom:1px solid #ffffff0b;color:#cbd0c8;font-size:11px}tbody tr:last-child td{border-bottom:0}tbody tr:hover{background:#ffffff04}td strong{color:#eef0eb;font-size:11px}.code{color:#c5d99f;font:600 10px ui-monospace,monospace;white-space:nowrap}.description{max-width:520px;color:#9da398;line-height:1.5}.status{display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border:1px solid transparent;border-radius:20px;font-size:9px;font-weight:700;white-space:nowrap}.status i{width:5px;height:5px;border-radius:50%;background:currentColor}.active{border-color:#9bd96e25;background:#8bd74f12;color:#b5df8a}.inactive{border-color:#ffffff14;background:#ffffff08;color:#a7aaa2}.actions{display:flex;justify-content:flex-end}.actions button{width:30px;height:30px;display:grid;place-items:center;border:1px solid transparent;border-radius:7px;background:transparent;color:#abb1a8;cursor:pointer}.actions button:hover{border-color:#ffffff18;background:#ffffff09;color:#f1f2ef}.list-state{min-height:220px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:#9da398;font-size:11px;text-align:center}.list-state strong{color:#e4e7e1;font-size:13px}.empty-mark{width:44px;height:44px;display:grid;place-items:center;margin-bottom:4px;border:1px solid #ffffff14;border-radius:13px;color:#c4d89e}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.project-type-cards{display:none}
+@media(max-width:760px){.table-wrap{display:none}.project-type-cards{display:grid;gap:10px;padding:11px}.project-type-card{min-width:0;padding:13px;border:1px solid #ffffff12;border-radius:10px;background:#ffffff03}.card-top{display:flex;align-items:center;gap:9px}.identity-copy{min-width:0;display:grid;gap:4px}.identity-copy strong{overflow:hidden;color:#eef0eb;font-size:11px;text-overflow:ellipsis;white-space:nowrap}.identity-copy small{color:#858c82;font:9px ui-monospace,monospace}.card-top .status{margin-left:auto}.project-type-card p{margin:12px 0;padding:10px 0;border-top:1px solid #ffffff0d;border-bottom:1px solid #ffffff0d;color:#b6bcb2;font-size:10px;line-height:1.5}.card-actions{display:flex;justify-content:flex-end}.card-actions button{height:31px;display:flex;align-items:center;gap:6px;padding:0 9px;border:1px solid transparent;border-radius:7px;background:transparent;color:#abb1a8;font-size:10px;cursor:pointer}}
+</style>

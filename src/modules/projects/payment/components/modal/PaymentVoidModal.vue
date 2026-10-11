@@ -1,0 +1,19 @@
+<script setup lang="ts">
+import { ref, watch } from 'vue'
+import AppIcon from '../../../../../shared/components/layout/AppIcon.vue'
+import FormTextarea from '../../../../../shared/components/form/FormTextarea.vue'
+import type { ProjectPayment } from '../../types/payment'
+
+const props = defineProps<{ payment: ProjectPayment | null; submitting: boolean; error: string }>()
+const emit = defineEmits<{ close: []; confirm: [reason: string] }>()
+const reason = ref('')
+const validation = ref('')
+watch(() => props.payment?.id, () => { reason.value = ''; validation.value = '' })
+function confirm() { if (reason.value.trim().length < 5) { validation.value = 'Alasan koreksi wajib diisi minimal 5 karakter.'; return } emit('confirm', reason.value.trim()) }
+</script>
+
+<template><Teleport to="body"><div v-if="props.payment" class="backdrop" @click.self="!props.submitting && emit('close')"><section class="card" role="dialog" aria-modal="true" aria-labelledby="void-title"><header><span class="icon"><AppIcon name="rotate-ccw" :size="19" /></span><button type="button" aria-label="Tutup" @click="emit('close')"><AppIcon name="x" :size="18" /></button></header><h2 id="void-title">Koreksi penerimaan?</h2><p>{{ props.payment.code }} akan ditandai dikoreksi, bukan dihapus. Sisa tagihan invoice akan bertambah kembali.</p><label for="void-reason">Alasan koreksi <i>*</i><FormTextarea id="void-reason" v-model="reason" rows="3" maxlength="1000" minlength="5" required placeholder="Contoh: nominal atau referensi pembayaran keliru" /></label><div v-if="validation || props.error" class="error" role="alert">{{ validation || props.error }}</div><footer><button type="button" class="secondary" :disabled="props.submitting" @click="emit('close')">Kembali</button><button type="button" class="primary" :disabled="props.submitting" @click="confirm">{{ props.submitting ? 'Memproses...' : 'Koreksi penerimaan' }}</button></footer></section></div></Teleport></template>
+
+<style scoped>
+.backdrop{position:fixed;z-index:120;inset:0;display:grid;place-items:center;padding:18px;background:#000a;backdrop-filter:blur(4px)}.card{width:min(100%,440px);padding:23px;border:1px solid #3b3e38;border-radius:15px;background:#20221f;color:#eff1ed;box-shadow:0 22px 70px #0009}.card header{display:flex;align-items:center;justify-content:space-between}.icon{width:40px;height:40px;display:grid;place-items:center;border-radius:12px;background:#a7463c22;color:#ffb4a8}.card header button{width:32px;height:32px;display:grid;place-items:center;border:1px solid #ffffff18;border-radius:50%;background:transparent;color:#adb4a7}.card h2{margin:18px 0 8px;font:700 19px Manrope,sans-serif}.card p{margin:0 0 18px;color:#a8aea2;font-size:12px;line-height:1.6}.card label{display:grid;gap:8px;color:#d9ddd4;font-size:11px;font-weight:600}.card label i{color:#ffd64c;font-style:normal}.error{margin-top:10px;color:#ffb4a8;font-size:10px}.card footer{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}.card footer button{height:36px;padding:0 12px;border:1px solid #ffffff1a;border-radius:7px;font-size:10px;font-weight:700}.secondary{background:transparent;color:#cbd0c6}.primary{border-color:transparent;background:#ffd64c;color:#263215}@media(max-width:520px){.backdrop{align-items:end;padding:10px 10px calc(10px + env(safe-area-inset-bottom))}.card{padding:19px;border-radius:16px}}
+</style>
